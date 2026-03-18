@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>UZU-HOSTEL Wi-Fi</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#F5A623;--gold-d:#C2780A;
+  --bg:#060A0F;--s1:#0C1018;--s2:#131B26;--s3:#1A2433;
+  --border:rgba(245,166,35,.16);--border2:rgba(255,255,255,.07);
+  --text:#EFF6FF;--muted:#607080;--dim:#3A4A5C;
+  --green:#22C55E;--red:#EF4444;
+}
+html,body{min-height:100dvh;background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 70% 50% at 50% -10%,rgba(245,166,35,.12) 0%,transparent 60%),
+             radial-gradient(ellipse 40% 30% at 90% 80%,rgba(194,65,12,.07) 0%,transparent 50%);}
+.wrap{position:relative;z-index:1;min-height:100dvh;display:flex;flex-direction:column;align-items:center;padding:28px 16px 48px}
+.logo{text-align:center;margin-bottom:28px}
+.logo-icon{display:inline-flex;align-items:center;justify-content:center;width:60px;height:60px;border-radius:16px;margin-bottom:12px;background:linear-gradient(135deg,var(--gold),var(--gold-d));box-shadow:0 0 40px rgba(245,166,35,.3);font-size:26px;font-weight:900;color:var(--bg)}
+.logo h1{font-size:21px;font-weight:800;letter-spacing:-.3px}
+.logo p{font-size:12px;color:var(--muted);margin-top:3px}
+.card{width:100%;max-width:420px;background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:26px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.prog{display:flex;align-items:center;gap:0;margin-bottom:26px}
+.pdot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;flex-shrink:0;transition:all .3s}
+.pdot.done{background:var(--green);color:#fff}
+.pdot.active{background:var(--gold);color:var(--bg);box-shadow:0 0 16px rgba(245,166,35,.5)}
+.pdot.idle{background:var(--s3);color:var(--muted);border:1px solid var(--border2)}
+.pline{flex:1;height:1px;background:var(--border2)}
+label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:5px;margin-top:16px}
+label:first-of-type{margin-top:0}
+input[type=tel]{width:100%;padding:13px 14px;background:var(--s2);border:1.5px solid var(--border2);border-radius:10px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:16px;letter-spacing:.06em;outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none}
+input[type=tel]:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,166,35,.12)}
+.pkgs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+.pkg{background:var(--s2);border:1.5px solid var(--border2);border-radius:12px;padding:13px 8px;cursor:pointer;text-align:center;transition:all .15s;user-select:none}
+.pkg:hover{border-color:rgba(245,166,35,.3);transform:translateY(-1px)}
+.pkg.on{border-color:var(--gold);background:rgba(245,166,35,.08);box-shadow:0 0 0 1px rgba(245,166,35,.25)}
+.pkg .d{font-size:18px;font-weight:900;color:var(--gold)}
+.pkg .t{font-size:10px;color:var(--muted);margin:2px 0}
+.pkg .p{font-size:14px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.btn{width:100%;margin-top:22px;padding:15px;background:linear-gradient(135deg,var(--gold),var(--gold-d));border:none;border-radius:12px;color:var(--bg);font-family:'Outfit',sans-serif;font-size:16px;font-weight:800;cursor:pointer;transition:opacity .2s,transform .12s;box-shadow:0 6px 24px rgba(245,166,35,.28)}
+.btn:hover{opacity:.92;transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.momo-box{background:var(--s2);border:1.5px solid var(--border);border-radius:14px;padding:20px;text-align:center}
+.momo-number{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:var(--gold);letter-spacing:.12em;margin:6px 0}
+.momo-name{font-size:13px;color:var(--muted);margin-bottom:12px}
+.amount-pill{display:inline-block;padding:6px 20px;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.3);border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--gold)}
+.s-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:13px;color:rgba(239,246,255,.7);line-height:1.55}
+.s-num{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:rgba(245,166,35,.14);border:1px solid rgba(245,166,35,.28);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--gold);font-family:'JetBrains Mono',monospace}
+.copy-btn{display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:7px 14px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.25);border-radius:8px;color:var(--gold);font-size:12px;font-weight:600;font-family:'JetBrains Mono',monospace;cursor:pointer;transition:background .2s}
+.copy-btn:hover{background:rgba(245,166,35,.2)}
+.upload-zone{position:relative;margin-top:6px;border:2px dashed rgba(245,166,35,.25);border-radius:14px;background:var(--s2);padding:32px 16px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;overflow:hidden}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--gold);background:rgba(245,166,35,.05)}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{font-size:36px;margin-bottom:10px;display:block}
+.upload-zone h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.upload-zone p{font-size:12px;color:var(--muted)}
+.preview-wrap{position:relative;margin-top:14px}
+.preview-wrap img{width:100%;max-height:260px;object-fit:contain;border-radius:10px;border:1px solid var(--border2)}
+.remove-img{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.remove-img:hover{background:var(--red)}
+.verify-anim{text-align:center;padding:8px 0}
+.scan-ring{width:70px;height:70px;margin:0 auto 18px;border:3px solid rgba(245,166,35,.15);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scan-label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+.scan-steps{list-style:none;text-align:left;margin-top:18px}
+.scan-steps li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border2);font-size:13px;color:var(--muted)}
+.scan-steps li:last-child{border:none}
+.scan-steps li .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-done{background:var(--green)}
+.dot-active{background:var(--gold);animation:pulse 1s ease infinite}
+.dot-idle{background:var(--dim)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.success{text-align:center}
+.check-ring{width:68px;height:68px;margin:0 auto 18px;border-radius:50%;background:rgba(34,197,94,.1);border:2px solid rgba(34,197,94,.35);display:flex;align-items:center;justify-content:center;font-size:28px;animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.success h2{font-size:21px;font-weight:800;color:var(--green);margin-bottom:5px}
+.success .sub{font-size:13px;color:var(--muted);margin-bottom:22px}
+.vbox{background:var(--s2);border:1.5px solid var(--border);border-radius:16px;padding:20px;margin-bottom:18px;position:relative;overflow:hidden;text-align:left}
+.vbox::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold-d))}
+.vbox-row{display:grid;grid-template-columns:1fr 1px 1fr;gap:0}
+.vbox-divider{background:rgba(255,255,255,.06)}
+.vbox-col{padding:0 14px}
+.vbox-col:first-child{padding-left:0}
+.vbox-col:last-child{padding-right:0}
+.vlabel{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:3px}
+.vval{font-family:'JetBrains Mono',monospace;color:var(--gold);font-size:26px;font-weight:700;letter-spacing:.1em}
+.vval.sm{font-size:16px}
+.vinfo{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.06)}
+.howto{background:var(--s2);border:1px solid var(--border2);border-radius:12px;padding:16px;text-align:left}
+.howto-head{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px}
+.receipt-detail{background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:12px}
+.receipt-detail p{display:flex;justify-content:space-between;padding:2px 0;color:rgba(239,246,255,.65)}
+.receipt-detail p span{color:var(--green);font-family:'JetBrains Mono',monospace;font-weight:600}
+.failed{text-align:center}
+.fail-ring{width:68px;height:68px;margin:0 auto 18px;border-radius:50%;background:rgba(239,68,68,.08);border:2px solid rgba(239,68,68,.28);display:flex;align-items:center;justify-content:center;font-size:28px}
+.failed h2{font-size:20px;font-weight:800;color:var(--red);margin-bottom:8px}
+.failed p{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.65}
+.err-detail{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:12px 14px;margin-bottom:18px;font-size:13px;color:#FCA5A5;text-align:left;line-height:1.6}
+.btn-outline{display:inline-block;padding:12px 28px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.3);border-radius:10px;color:var(--gold);font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-outline:hover{background:rgba(245,166,35,.2)}
+.err{margin-top:10px;padding:10px 12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:8px;font-size:13px;color:#FCA5A5;display:none}
+.footer{margin-top:22px;text-align:center;font-size:11px;color:var(--muted);line-height:2}
+.footer strong{color:var(--gold)}
+@media(max-width:360px){.pkgs{grid-template-columns:1fr}.vval{font-size:22px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="logo">
+  <div class="logo-icon">U</div>
+  <h1>UZU-HOSTEL Wi-Fi</h1>
+  <p>Pay with MoMo · Get online instantly</p>
+</div>
+
+<!-- SCREEN 1 — Package + phone -->
+<div class="card" id="s-form">
+  <div class="prog">
+    <div class="pdot active">1</div><div class="pline"></div>
+    <div class="pdot idle">2</div><div class="pline"></div>
+    <div class="pdot idle">3</div><div class="pline"></div>
+    <div class="pdot idle">4</div>
+  </div>
+  <label>Choose Package</label>
+  <div class="pkgs">
+    <div class="pkg on" data-pkg="3gb" data-price="5.00" onclick="pickPkg(this)">
+      <div class="d">3 GB</div><div class="t">7 days</div><div class="p">GH₵5</div>
+    </div>
+    <div class="pkg" data-pkg="6gb" data-price="9.00" onclick="pickPkg(this)">
+      <div class="d">6 GB</div><div class="t">14 days</div><div class="p">GH₵9</div>
+    </div>
+    <div class="pkg" data-pkg="unlimited" data-price="40.00" onclick="pickPkg(this)">
+      <div class="d">∞</div><div class="t">30 days</div><div class="p">GH₵40</div>
+    </div>
+  </div>
+  <label>Your Phone Number</label>
+  <input type="tel" id="phone" placeholder="0241234567" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'')"/>
+  <div class="err" id="err1"></div>
+  <button class="btn" onclick="goToSend()">Next — See Where to Send →</button>
+</div>
+
+<!-- SCREEN 2 — Send money instructions -->
+<div class="card" id="s-send" style="display:none">
+  <div class="prog">
+    <div class="pdot done">✓</div><div class="pline"></div>
+    <div class="pdot active">2</div><div class="pline"></div>
+    <div class="pdot idle">3</div><div class="pline"></div>
+    <div class="pdot idle">4</div>
+  </div>
+  <div class="momo-box">
+    <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Send MoMo to this number</div>
+    <div class="momo-number" id="momo-num">0241234567</div>
+    <div class="momo-name" id="momo-name">UZU HOSTEL</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Send exactly</div>
+    <div class="amount-pill" id="send-amount">GH₵ 5.00</div>
+    <br>
+    <button class="copy-btn" onclick="copyNumber()">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      <span id="copy-num-txt">Copy Number</span>
+    </button>
+  </div>
+  <div style="margin-top:20px">
+    <div class="s-item"><div class="s-num">1</div>Open your MoMo app (MTN / Telecel / AirtelTigo)</div>
+    <div class="s-item"><div class="s-num">2</div>Send <strong id="step-amt" style="color:var(--gold)">GH₵5.00</strong> to the number shown above</div>
+    <div class="s-item"><div class="s-num">3</div>Wait for the <strong>Success confirmation</strong> screen to appear</div>
+    <div class="s-item"><div class="s-num">4</div><strong>Screenshot</strong> that success screen, then come back here</div>
+  </div>
+  <button class="btn" onclick="show('s-upload')" style="margin-top:20px">I've Sent the Money — Upload Screenshot →</button>
+  <div style="text-align:center;margin-top:10px">
+    <span onclick="show('s-form')" style="font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline">← Change package</span>
+  </div>
+</div>
+
+<!-- SCREEN 3 — Upload screenshot -->
+<div class="card" id="s-upload" style="display:none">
+  <div class="prog">
+    <div class="pdot done">✓</div><div class="pline"></div>
+    <div class="pdot done">✓</div><div class="pline"></div>
+    <div class="pdot active">3</div><div class="pline"></div>
+    <div class="pdot idle">4</div>
+  </div>
+  <label>Upload Your MoMo Screenshot</label>
+  <div class="upload-zone" id="drop-zone">
+    <input type="file" id="file-input" accept="image/jpeg,image/jpg,image/png,image/webp" onchange="fileChosen(this)" style="pointer-events:none"/>
+    <span class="upload-icon">📱</span>
+    <h3>Tap to choose screenshot</h3>
+    <p>JPG · PNG · WebP · max 10 MB</p>
+  </div>
+  <div class="preview-wrap" id="preview-wrap" style="display:none">
+    <img id="preview-img" src="" alt="Receipt preview"/>
+    <div class="remove-img" onclick="removeFile()">✕</div>
+  </div>
+  <div class="err" id="err3"></div>
+  <button class="btn" id="btn-verify" onclick="submitScreenshot()" disabled>Verify Payment &amp; Get Wi-Fi Code</button>
+  <div style="text-align:center;margin-top:10px">
+    <span onclick="show('s-send')" style="font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline">← Back</span>
+  </div>
+</div>
+
+<!-- SCREEN 4 — AI verifying -->
+<div class="card" id="s-verify" style="display:none">
+  <div class="prog">
+    <div class="pdot done">✓</div><div class="pline"></div>
+    <div class="pdot done">✓</div><div class="pline"></div>
+    <div class="pdot done">✓</div><div class="pline"></div>
+    <div class="pdot active">4</div>
+  </div>
+  <div class="verify-anim">
+    <div class="scan-ring"></div>
+    <div class="scan-label">AI Reading Your Receipt</div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.6">Checking your screenshot against payment records…</p>
+    <ul class="scan-steps">
+      <li><div class="dot dot-active" id="sd1"></div><span id="st1">Reading payment amount…</span></li>
+      <li><div class="dot dot-idle"   id="sd2"></div><span id="st2">Checking date &amp; time…</span></li>
+      <li><div class="dot dot-idle"   id="sd3"></div><span id="st3">Verifying recipient…</span></li>
+      <li><div class="dot dot-idle"   id="sd4"></div><span id="st4">Assigning your Wi-Fi code…</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- SCREEN 5 — Success -->
+<div class="card" id="s-success" style="display:none">
+  <div class="success">
+    <div class="check-ring">✓</div>
+    <h2>You're all set!</h2>
+    <p class="sub">Payment verified · Wi-Fi code ready · <strong>Screenshot it!</strong></p>
+    <div class="receipt-detail" id="receipt-detail"></div>
+    <div class="vbox">
+      <div class="vbox-row">
+        <div class="vbox-col"><div class="vlabel">Username</div><div class="vval" id="v-user">XSDG</div></div>
+        <div class="vbox-divider"></div>
+        <div class="vbox-col"><div class="vlabel">Password / PIN</div><div class="vval" id="v-pin">3544</div></div>
+      </div>
+      <div class="vinfo">
+        <div class="vlabel">Package</div><div class="vval sm" id="v-pkg">3GB — 7 Days</div>
+        <div class="vlabel" style="margin-top:10px">Valid Until</div><div class="vval sm" id="v-exp">25 Mar 2026</div>
+      </div>
+    </div>
+    <button class="copy-btn" onclick="copyVoucher()" style="width:100%;justify-content:center;padding:11px">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      <span id="copy-v-txt">Copy Code</span>
+    </button>
+    <div class="howto" style="margin-top:18px">
+      <div class="howto-head">How to connect now</div>
+      <div class="s-item"><div class="s-num">1</div>Open any browser — the Wi-Fi login page appears automatically</div>
+      <div class="s-item"><div class="s-num">2</div>Enter your <strong style="color:var(--gold)">Username</strong> and <strong style="color:var(--gold)">PIN</strong> from above</div>
+      <div class="s-item"><div class="s-num">3</div>Tap <strong>Login</strong> — you're online! 🚀</div>
+      <div class="s-item"><div class="s-num">💡</div>If you disconnect, log back in with the <strong>same code</strong> until it expires</div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 6 — Failed -->
+<div class="card" id="s-failed" style="display:none">
+  <div class="failed">
+    <div class="fail-ring">✕</div>
+    <h2>Verification Failed</h2>
+    <div class="err-detail" id="fail-reason">The screenshot could not be verified.</div>
+    <p>Please read the reason above and try again with a clear screenshot of your MoMo success screen.</p>
+    <button class="btn-outline" onclick="retryUpload()">Try Again</button>
+  </div>
+</div>
+
+<div class="footer">
+  <div>UZU-HOSTEL · Powered by GhanaHotspot</div>
+  <div>Need help? WhatsApp: <strong>0XX XXX XXXX</strong></div>
+</div>
+</div>
+
+<script>
+const API = window.location.origin;
+let pkg="3gb", price="5.00", phone="", imgFile=null;
+
+function show(id){
+  ["s-form","s-send","s-upload","s-verify","s-success","s-failed"]
+    .forEach(s=>{ const el=document.getElementById(s); if(el) el.style.display=s===id?"":"none"; });
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function pickPkg(el){
+  document.querySelectorAll(".pkg").forEach(c=>c.classList.remove("on"));
+  el.classList.add("on"); pkg=el.dataset.pkg; price=el.dataset.price;
+}
+async function goToSend(){
+  const ph=document.getElementById("phone").value.trim();
+  if(!/^0[0-9]{9}$/.test(ph)){ showErr("err1","Please enter a valid 10-digit Ghana number (e.g. 0241234567)"); return; }
+  phone=ph;
+  try{
+    const r=await fetch(`${API}/api/payment-info?package_id=${pkg}`);
+    const d=await r.json();
+    document.getElementById("momo-num").textContent=d.send_to_number;
+    document.getElementById("momo-name").textContent=d.send_to_name;
+    document.getElementById("send-amount").textContent=`GH₵ ${d.amount.toFixed(2)}`;
+    document.getElementById("step-amt").textContent=`GH₵ ${d.amount.toFixed(2)}`;
+  }catch(e){
+    document.getElementById("send-amount").textContent=`GH₵ ${price}`;
+    document.getElementById("step-amt").textContent=`GH₵ ${price}`;
+  }
+  show("s-send");
+}
+function fileChosen(input){
+  if(!input.files||!input.files[0]) return;
+  imgFile=input.files[0];
+  document.getElementById("preview-img").src=URL.createObjectURL(imgFile);
+  document.getElementById("preview-wrap").style.display="";
+  document.querySelector(".upload-zone").style.display="none";
+  document.getElementById("btn-verify").disabled=false;
+  document.getElementById("err3").style.display="none";
+}
+function removeFile(){
+  imgFile=null;
+  document.getElementById("file-input").value="";
+  document.getElementById("preview-wrap").style.display="none";
+  document.querySelector(".upload-zone").style.display="";
+  document.getElementById("btn-verify").disabled=true;
+}
+const dz=document.getElementById("drop-zone");
+dz.addEventListener("dragover",e=>{e.preventDefault();dz.classList.add("drag")});
+dz.addEventListener("dragleave",()=>dz.classList.remove("drag"));
+dz.addEventListener("drop",e=>{
+  e.preventDefault();dz.classList.remove("drag");
+  const f=e.dataTransfer.files[0];
+  if(f){document.getElementById("file-input").files=e.dataTransfer.files;fileChosen({files:[f]});}
+});
+async function submitScreenshot(){
+  if(!imgFile){showErr("err3","Please select a screenshot first.");return;}
+  show("s-verify"); animateScan();
+  const fd=new FormData();
+  fd.append("phone",phone); fd.append("package_id",pkg); fd.append("screenshot",imgFile,imgFile.name);
+  try{
+    const r=await fetch(`${API}/api/verify-screenshot`,{method:"POST",body:fd});
+    const d=await r.json();
+    if(!r.ok){showFailed(d.detail||"Verification failed. Please try again.");return;}
+    showSuccess(d);
+  }catch(e){showFailed("Network error. Please check your connection and try again.");}
+}
+function animateScan(){
+  const steps=[["sd1","st1","Reading payment amount…"],["sd2","st2","Checking date & time…"],["sd3","st3","Verifying recipient matches hostel…"],["sd4","st4","Assigning your Wi-Fi code…"]];
+  steps.forEach(([d,t,txt],i)=>{
+    setTimeout(()=>{
+      if(i>0){document.getElementById(steps[i-1][0]).className="dot dot-done";document.getElementById(steps[i-1][1]).style.color="var(--green)";}
+      document.getElementById(d).className="dot dot-active";
+    },i*1800);
+  });
+}
+function showSuccess(d){
+  const v=d.voucher_code;
+  document.getElementById("v-user").textContent=v.username;
+  document.getElementById("v-pin").textContent=v.pin;
+  document.getElementById("v-pkg").textContent=d.package||"3GB — 7 Days";
+  document.getElementById("v-exp").textContent=d.expiry||"—";
+  const r=d.receipt||{};
+  document.getElementById("receipt-detail").innerHTML=
+    `<p>Reference <span>${r.reference||"—"}</span></p>
+     <p>Amount paid <span>GH₵ ${(r.amount||0).toFixed(2)}</span></p>
+     <p>Receipt date <span>${r.date||"—"}</span></p>
+     <p>Network <span>${r.network||"—"}</span></p>`;
+  show("s-success");
+}
+function showFailed(reason){document.getElementById("fail-reason").textContent=reason;show("s-failed");}
+function retryUpload(){
+  imgFile=null;document.getElementById("file-input").value="";
+  document.getElementById("preview-wrap").style.display="none";
+  document.querySelector(".upload-zone").style.display="";
+  document.getElementById("btn-verify").disabled=true;
+  show("s-upload");
+}
+function copyNumber(){
+  const num=document.getElementById("momo-num").textContent;
+  navigator.clipboard.writeText(num).then(()=>{const el=document.getElementById("copy-num-txt");el.textContent="Copied! ✓";setTimeout(()=>el.textContent="Copy Number",2000);});
+}
+function copyVoucher(){
+  const u=document.getElementById("v-user").textContent,p=document.getElementById("v-pin").textContent;
+  const pkg2=document.getElementById("v-pkg").textContent,exp=document.getElementById("v-exp").textContent;
+  navigator.clipboard.writeText(`UZU-HOSTEL Wi-Fi\nUsername: ${u}\nPIN: ${p}\nPackage: ${pkg2}\nExpires: ${exp}`).then(()=>{const el=document.getElementById("copy-v-txt");el.textContent="Copied! ✓";setTimeout(()=>el.textContent="Copy Code",2500);});
+}
+function showErr(id,msg){const el=document.getElementById(id);el.textContent=msg;el.style.display="block";}
+</script>
+</body>
+</html>
